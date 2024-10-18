@@ -12,9 +12,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProjectPersistenceAdapter implements ProjectOutputPort {
 
-    private ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
 
-    private ProjectPersistenceMapper projectPersistenceMapper;
+    private final ProjectPersistenceMapper projectPersistenceMapper;
 
     @Override
     public Project saveProject(Project project) {
