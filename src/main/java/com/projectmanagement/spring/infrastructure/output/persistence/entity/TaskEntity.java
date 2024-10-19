@@ -18,15 +18,11 @@ public class TaskEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false, updatable = false)
-    private ProjectEntity project;
-
     @Column(name = "name")
     private String name;
 
     @Column(name = "priority")
-    private PriorityEntity priority;
+    private PriorityEnum priority;
 
     @Column(name = "description")
     private String description;
@@ -36,6 +32,10 @@ public class TaskEntity {
 
     @Column(name = "end_date")
     private LocalDate endDate;
+
+    @ManyToOne
+    @JoinColumn(name = "project_id", nullable = false, updatable = false)
+    private ProjectEntity project;
 
     @ManyToMany(mappedBy = "tasks")
     private Set<UserEntity> users;

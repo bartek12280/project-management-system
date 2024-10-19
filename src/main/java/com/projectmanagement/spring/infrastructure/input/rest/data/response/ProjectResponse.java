@@ -1,22 +1,23 @@
-package com.projectmanagement.spring.domain.model;
+package com.projectmanagement.spring.infrastructure.input.rest.data.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Set;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
-public class Project {
+public class ProjectResponse {
 
     private Long id;
+
     private String name;
+
     private String description;
+
     private LocalDate startDate;
+
     private LocalDate endDate;
-    private Set<Task> tasks;
-    private Set<User> users;
 }
