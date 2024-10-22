@@ -7,7 +7,9 @@ import com.projectmanagement.spring.infrastructure.output.persistence.mapper.Pro
 import com.projectmanagement.spring.infrastructure.output.persistence.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class ProjectPersistenceAdapter implements ProjectOutputPort {
@@ -25,6 +27,25 @@ public class ProjectPersistenceAdapter implements ProjectOutputPort {
 
     @Override
     public Optional<Project> getProjectById(Long id) {
-        return Optional.empty();
+        final Optional<ProjectEntity> projectEntity = this.projectRepository.findById(id);
+
+        if (projectEntity.isEmpty()){
+            return Optional.empty();
+        }
+
+        Project project = this.projectPersistenceMapper.toProject(projectEntity.get());
+        return Optional.of(project);
+    }
+
+    @Override
+    public List<Project> getAllProjects() {
+        return this.projectRepository.findAll().stream()
+                .map(this.projectPersistenceMapper::toProject)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteProjectById(Long id) {
+        this.projectRepository.deleteById(id);
     }
 }

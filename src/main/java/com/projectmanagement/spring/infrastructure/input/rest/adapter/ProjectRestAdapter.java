@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/projects")
 @RequiredArgsConstructor
@@ -18,6 +20,15 @@ public class ProjectRestAdapter {
     private final ProjectRestMapper projectRestMapper;
 
     private final ProjectInputPort projectInputPort;
+
+    @GetMapping
+    public ResponseEntity<List<ProjectResponse>> getAllProjects(){
+        List<ProjectResponse> projects = this.projectInputPort.getAllProjects().stream()
+                .map(this.projectRestMapper::toProjectResponse)
+                .toList();
+
+        return ResponseEntity.ok(projects);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProjectResponse> getProject(@PathVariable Long id) {
@@ -33,5 +44,20 @@ public class ProjectRestAdapter {
         project = projectInputPort.createProject(project);
 
         return ResponseEntity.ok(this.projectRestMapper.toProjectResponse(project));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProjectResponse> updateProject(@PathVariable Long id,@RequestBody @Valid ProjectRequest projectRequest) {
+        Project updatedProject = projectRestMapper.toProject(projectRequest);
+
+        updatedProject = this.projectInputPort.updateProjectById(id,updatedProject);
+
+        return ResponseEntity.ok(this.projectRestMapper.toProjectResponse(updatedProject));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<ProjectResponse> deleteProject(@PathVariable Long id) {
+        this.projectInputPort.deleteProjectById(id);
+        return ResponseEntity.noContent().build();
     }
 }
