@@ -55,7 +55,7 @@ public class ProjectRestAdapter {
         return ResponseEntity.ok(this.projectRestMapper.toProjectResponse(updatedProject));
     }
 
-    @DeleteMapping
+    @DeleteMapping("{id}")
     public ResponseEntity<ProjectResponse> deleteProject(@PathVariable Long id) {
         this.projectInputPort.deleteProjectById(id);
         return ResponseEntity.noContent().build();
