@@ -7,7 +7,9 @@ import com.projectmanagement.spring.infrastructure.output.persistence.mapper.Tas
 import com.projectmanagement.spring.infrastructure.output.persistence.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class TaskPersistenceAdapter implements TaskOutputPort {
@@ -33,5 +35,17 @@ public class TaskPersistenceAdapter implements TaskOutputPort {
 
         Task task = this.taskPersistenceMapper.toTask(taskEntity.get());
         return Optional.of(task);
+    }
+
+    @Override
+    public List<Task> getAllTasks() {
+        return this.taskRepository.findAll().stream()
+                .map(this.taskPersistenceMapper::toTask)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteTaskById(Long id) {
+        this.taskRepository.deleteById(id);
     }
 }

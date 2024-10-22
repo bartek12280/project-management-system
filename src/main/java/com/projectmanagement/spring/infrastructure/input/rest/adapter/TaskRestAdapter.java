@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/Tasks")
 @RequiredArgsConstructor
@@ -18,6 +21,15 @@ public class TaskRestAdapter {
     private final TaskRestMapper taskRestMapper;
 
     private final TaskInputPort taskInputPort;
+
+    @GetMapping
+    public ResponseEntity<List<TaskResponse>> getTasks() {
+        List<TaskResponse> tasks = taskInputPort.getAllTasks().stream()
+                .map(this.taskRestMapper::toTaskResponse)
+                .toList();
+
+        return ResponseEntity.ok(tasks);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponse> getTask(@PathVariable Long id){
@@ -32,5 +44,19 @@ public class TaskRestAdapter {
         task = taskInputPort.createTask(task);
 
         return ResponseEntity.ok(taskRestMapper.toTaskResponse(task));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TaskResponse> updateTask(@PathVariable Long id, @RequestBody @Valid TaskRequest taskRequest){
+        Task updatedTask = this.taskRestMapper.toTask(taskRequest);
+        this.taskInputPort.updateTaskById(id, updatedTask);
+
+        return ResponseEntity.ok(taskRestMapper.toTaskResponse(updatedTask));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<TaskResponse> deleteTask(@PathVariable Long id){
+        this.taskInputPort.deleteTaskById(id);
+        return ResponseEntity.noContent().build();
     }
 }
