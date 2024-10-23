@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: "project-management-system"
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+    show-sql: true
+
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/projectmanager"
+    username: "admin"
+    password: "admin"
+    driver-class-name: org.postgresql.Driver
+
+server:
+  port: 9090
