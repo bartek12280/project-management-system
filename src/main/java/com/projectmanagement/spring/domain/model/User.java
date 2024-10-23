@@ -6,6 +6,7 @@ import java.util.Set;
 
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {

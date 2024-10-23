@@ -7,7 +7,9 @@ import com.projectmanagement.spring.infrastructure.output.persistence.mapper.Use
 import com.projectmanagement.spring.infrastructure.output.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class UserPersistenceAdapter implements UserOutputPort {
@@ -34,5 +36,17 @@ public class UserPersistenceAdapter implements UserOutputPort {
 
         User user = this.userPersistenceMapper.toUser(userEntity.get());
         return Optional.of(user);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return this.userRepository.findAll().stream()
+                .map(this.userPersistenceMapper::toUser)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        this.userRepository.deleteById(id);
     }
 }

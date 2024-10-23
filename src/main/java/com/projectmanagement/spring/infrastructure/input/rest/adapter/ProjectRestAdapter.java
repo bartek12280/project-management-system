@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/projects")
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class ProjectRestAdapter {
     private final ProjectInputPort projectInputPort;
 
     @GetMapping
-    public ResponseEntity<List<ProjectResponse>> getAllProjects(){
+    public ResponseEntity<List<ProjectResponse>> getAllProjects() {
         List<ProjectResponse> projects = this.projectInputPort.getAllProjects().stream()
                 .map(this.projectRestMapper::toProjectResponse)
                 .toList();
@@ -47,10 +48,10 @@ public class ProjectRestAdapter {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProjectResponse> updateProject(@PathVariable Long id,@RequestBody @Valid ProjectRequest projectRequest) {
+    public ResponseEntity<ProjectResponse> updateProject(@PathVariable Long id, @RequestBody @Valid ProjectRequest projectRequest) {
         Project updatedProject = projectRestMapper.toProject(projectRequest);
 
-        updatedProject = this.projectInputPort.updateProjectById(id,updatedProject);
+        updatedProject = this.projectInputPort.updateProjectById(id, updatedProject);
 
         return ResponseEntity.ok(this.projectRestMapper.toProjectResponse(updatedProject));
     }

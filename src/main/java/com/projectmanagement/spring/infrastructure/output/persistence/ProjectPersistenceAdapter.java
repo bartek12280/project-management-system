@@ -29,7 +29,7 @@ public class ProjectPersistenceAdapter implements ProjectOutputPort {
     public Optional<Project> getProjectById(Long id) {
         final Optional<ProjectEntity> projectEntity = this.projectRepository.findById(id);
 
-        if (projectEntity.isEmpty()){
+        if (projectEntity.isEmpty()) {
             return Optional.empty();
         }
 

@@ -28,11 +28,26 @@ public class UserRestAdapter {
         return ResponseEntity.ok(userResponse);
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRequest userRequest) {
         User user = userRestMapper.toUser(userRequest);
         user = userInputPort.createuser(user);
 
         return ResponseEntity.ok(this.userRestMapper.toUserResponse(user));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponse> updateProject(@PathVariable Long id, @RequestBody @Valid UserRequest userRequest) {
+        User updatedUser = this.userRestMapper.toUser(userRequest);
+
+        updatedUser = this.userInputPort.updateUserById(id,updatedUser);
+
+        return ResponseEntity.ok(this.userRestMapper.toUserResponse(updatedUser));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<UserResponse> deleteUser(@PathVariable Long id) {
+        this.userInputPort.deleteUserById(id);
+        return ResponseEntity.ok(this.userRestMapper.toUserResponse(this.userInputPort.getUserById(id)));
     }
 }
