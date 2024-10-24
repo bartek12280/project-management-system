@@ -5,9 +5,11 @@ import com.projectmanagement.spring.application.port.output.TaskOutputPort;
 import com.projectmanagement.spring.domain.exception.TaskNotFound;
 import com.projectmanagement.spring.domain.model.Task;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 @AllArgsConstructor
 public class TaskService implements TaskInputPort {
 

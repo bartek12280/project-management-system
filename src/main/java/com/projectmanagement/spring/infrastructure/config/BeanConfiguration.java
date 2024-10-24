@@ -3,6 +3,7 @@ package com.projectmanagement.spring.infrastructure.config;
 import com.projectmanagement.spring.application.service.ProjectService;
 import com.projectmanagement.spring.application.service.TaskService;
 import com.projectmanagement.spring.application.service.UserService;
+import com.projectmanagement.spring.infrastructure.input.rest.mapper.ProjectRestMapper;
 import com.projectmanagement.spring.infrastructure.output.persistence.ProjectPersistenceAdapter;
 import com.projectmanagement.spring.infrastructure.output.persistence.TaskPersistenceAdapter;
 import com.projectmanagement.spring.infrastructure.output.persistence.UserPersistenceAdapter;
@@ -45,7 +46,7 @@ public class BeanConfiguration {
         return new TaskPersistenceAdapter(taskRepository, taskPersistenceMapper);
     }
 
-    // todo: addActionListener
+//     todo: addActionListener
     @Bean
     public TaskService taskService(final TaskPersistenceAdapter taskPersistenceAdapter){
         return new TaskService(taskPersistenceAdapter);
