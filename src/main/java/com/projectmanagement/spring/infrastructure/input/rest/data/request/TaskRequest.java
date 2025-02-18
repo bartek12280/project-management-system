@@ -1,24 +1,26 @@
 package com.projectmanagement.spring.infrastructure.input.rest.data.request;
 
+import com.projectmanagement.spring.domain.model.Project;
+import com.projectmanagement.spring.domain.model.User;
 import com.projectmanagement.spring.infrastructure.output.persistence.entity.PriorityEnum;
-import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Set;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class TaskRequest {
 
-    @NotNull(message = "may not be null")
+    private Long id;
     private String name;
-
-    @NotNull(message = "may not be null")
-    private PriorityEnum priority;
-
-    @NotNull(message = "may not be null")
+    private PriorityEnum priorityEnum;
     private String description;
-
-    @NotNull(message = "may not be null")
     private LocalDate startDate;
-
-    @NotNull(message = "may not be null")
     private LocalDate endDate;
 }

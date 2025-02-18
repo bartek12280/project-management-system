@@ -1,0 +1,407 @@
+[1mdiff --git a/pom.xml b/pom.xml[m
+[1mindex 3419e58..eac05ec 100644[m
+[1m--- a/pom.xml[m
+[1m+++ b/pom.xml[m
+[36m@@ -65,11 +65,20 @@[m
+ 			<artifactId>mapstruct</artifactId>[m
+ 			<version>1.4.2.Final</version>[m
+ 		</dependency>[m
+[32m+[m		[32m<dependency>[m
+[32m+[m			[32m<groupId>org.mapstruct</groupId>[m
+[32m+[m			[32m<artifactId>mapstruct-processor</artifactId>[m
+[32m+[m			[32m<version>1.6.3</version>[m
+[32m+[m		[32m</dependency>[m
+ 		<dependency>[m
+ 			<groupId>org.springdoc</groupId>[m
+ 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>[m
+ 			<version>2.1.0</version>[m
+ 		</dependency>[m
+[32m+[m		[32m<dependency>[m
+[32m+[m			[32m<groupId>org.springframework.boot</groupId>[m
+[32m+[m			[32m<artifactId>spring-boot-starter-actuator</artifactId>[m
+[32m+[m		[32m</dependency>[m
+ 	</dependencies>[m
+ [m
+ 	<build>[m
+[36m@@ -78,6 +87,8 @@[m
+ 				<groupId>org.apache.maven.plugins</groupId>[m
+ 				<artifactId>maven-compiler-plugin</artifactId>[m
+ 				<configuration>[m
+[32m+[m					[32m<source>22</source>[m
+[32m+[m					[32m<target>22</target>[m
+ 					<annotationProcessorPaths>[m
+ 						<path>[m
+ 							<groupId>org.projectlombok</groupId>[m
+[1mdiff --git a/src/main/java/com/projectmanagement/spring/domain/model/Project.java b/src/main/java/com/projectmanagement/spring/domain/model/Project.java[m
+[1mindex a8d24c2..06cedc9 100644[m
+[1m--- a/src/main/java/com/projectmanagement/spring/domain/model/Project.java[m
+[1m+++ b/src/main/java/com/projectmanagement/spring/domain/model/Project.java[m
+[36m@@ -14,7 +14,6 @@[m [mimport java.util.Set;[m
+ @Setter[m
+ public class Project {[m
+ [m
+[31m-    private Long id;[m
+     private String name;[m
+     private String description;[m
+     private LocalDate startDate;[m
+[1mdiff --git a/src/main/java/com/projectmanagement/spring/domain/model/Task.java b/src/main/java/com/projectmanagement/spring/domain/model/Task.java[m
+[1mindex 617be75..4b34d07 100644[m
+[1m--- a/src/main/java/com/projectmanagement/spring/domain/model/Task.java[m
+[1m+++ b/src/main/java/com/projectmanagement/spring/domain/model/Task.java[m
+[36m@@ -15,7 +15,6 @@[m [mimport java.util.Set;[m
+ @Setter[m
+ public class Task {[m
+ [m
+[31m-    private Long id;[m
+     private String name;[m
+     private PriorityEnum priorityEnum;[m
+     private String description;[m
+[1mdiff --git a/src/main/java/com/projectmanagement/spring/domain/model/User.java b/src/main/java/com/projectmanagement/spring/domain/model/User.java[m
+[1mindex 973ebaa..6ba2e57 100644[m
+[1m--- a/src/main/java/com/projectmanagement/spring/domain/model/User.java[m
+[1m+++ b/src/main/java/com/projectmanagement/spring/domain/model/User.java[m
+[36m@@ -11,7 +11,6 @@[m [mimport java.util.Set;[m
+ @AllArgsConstructor[m
+ public class User {[m
+ [m
+[31m-    private Long id;[m
+     private String firstName;[m
+     private String lastName;[m
+     private String email;[m
+[1mdiff --git a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/adapter/UserRestAdapter.java b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/adapter/UserRestAdapter.java[m
+[1mindex 0a81960..7f7e8b0 100644[m
+[1m--- a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/adapter/UserRestAdapter.java[m
+[1m+++ b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/adapter/UserRestAdapter.java[m
+[36m@@ -10,6 +10,9 @@[m [mimport lombok.RequiredArgsConstructor;[m
+ import org.springframework.http.ResponseEntity;[m
+ import org.springframework.web.bind.annotation.*;[m
+ [m
+[32m+[m[32mimport java.util.List;[m
+[32m+[m[32mimport java.util.stream.Collectors;[m
+[32m+[m
+ @RestController[m
+ @RequestMapping("/users")[m
+ @RequiredArgsConstructor[m
+[36m@@ -28,6 +31,12 @@[m [mpublic class UserRestAdapter {[m
+         return ResponseEntity.ok(userResponse);[m
+     }[m
+ [m
+[32m+[m[32m    @GetMapping[m
+[32m+[m[32m    public ResponseEntity<List<UserResponse>> getUsers() {[m
+[32m+[m[32m        final List<UserResponse> users = userInputPort.getAllUsers().stream().map(userRestMapper::toUserResponse).toList();[m
+[32m+[m[32m        return ResponseEntity.ok(users);[m
+[32m+[m[32m    }[m
+[32m+[m
+     @PostMapping[m
+     public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRequest userRequest) {[m
+         User user = userRestMapper.toUser(userRequest);[m
+[1mdiff --git a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/request/ProjectRequest.java b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/request/ProjectRequest.java[m
+[1mindex 581741e..4143b58 100644[m
+[1m--- a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/request/ProjectRequest.java[m
+[1m+++ b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/request/ProjectRequest.java[m
+[36m@@ -1,27 +1,24 @@[m
+ package com.projectmanagement.spring.infrastructure.input.rest.data.request;[m
+ [m
+ [m
+[31m-import jakarta.validation.constraints.NotNull;[m
+[32m+[m[32mimport com.projectmanagement.spring.domain.model.Task;[m
+[32m+[m[32mimport com.projectmanagement.spring.domain.model.User;[m
+ import lombok.AllArgsConstructor;[m
+ import lombok.Getter;[m
+ import lombok.NoArgsConstructor;[m
+[32m+[m[32mimport lombok.Setter;[m
+ [m
+ import java.time.LocalDate;[m
+[32m+[m[32mimport java.util.Set;[m
+ [m
+ @NoArgsConstructor[m
+ @AllArgsConstructor[m
+ @Getter[m
+[32m+[m[32m@Setter[m
+ public class ProjectRequest {[m
+ [m
+[31m-    @NotNull(message = "may not be null")[m
+     private String name;[m
+[31m-[m
+[31m-    @NotNull(message = "may not be null")[m
+     private String description;[m
+[31m-[m
+[31m-    @NotNull(message = "may not be null")[m
+     private LocalDate startDate;[m
+[31m-[m
+[31m-    @NotNull(message = "may not be null")[m
+     private LocalDate endDate;[m
+ }[m
+[1mdiff --git a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/request/TaskRequest.java b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/request/TaskRequest.java[m
+[1mindex 969cbec..cc75d03 100644[m
+[1m--- a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/request/TaskRequest.java[m
+[1m+++ b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/request/TaskRequest.java[m
+[36m@@ -1,24 +1,26 @@[m
+ package com.projectmanagement.spring.infrastructure.input.rest.data.request;[m
+ [m
+[32m+[m[32mimport com.projectmanagement.spring.domain.model.Project;[m
+[32m+[m[32mimport com.projectmanagement.spring.domain.model.User;[m
+ import com.projectmanagement.spring.infrastructure.output.persistence.entity.PriorityEnum;[m
+[31m-import jakarta.validation.constraints.NotNull;[m
+[32m+[m[32mimport lombok.AllArgsConstructor;[m
+[32m+[m[32mimport lombok.Getter;[m
+[32m+[m[32mimport lombok.NoArgsConstructor;[m
+[32m+[m[32mimport lombok.Setter;[m
+ [m
+ import java.time.LocalDate;[m
+[32m+[m[32mimport java.util.Set;[m
+ [m
+[32m+[m[32m@NoArgsConstructor[m
+[32m+[m[32m@AllArgsConstructor[m
+[32m+[m[32m@Getter[m
+[32m+[m[32m@Setter[m
+ public class TaskRequest {[m
+ [m
+[31m-    @NotNull(message = "may not be null")[m
+[32m+[m[32m    private Long id;[m
+     private String name;[m
+[31m-[m
+[31m-    @NotNull(message = "may not be null")[m
+[31m-    private PriorityEnum priority;[m
+[31m-[m
+[31m-    @NotNull(message = "may not be null")[m
+[32m+[m[32m    private PriorityEnum priorityEnum;[m
+     private String description;[m
+[31m-[m
+[31m-    @NotNull(message = "may not be null")[m
+     private LocalDate startDate;[m
+[31m-[m
+[31m-    @NotNull(message = "may not be null")[m
+     private LocalDate endDate;[m
+ }[m
+[1mdiff --git a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/request/UserRequest.java b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/request/UserRequest.java[m
+[1mindex 7ec2745..5b142ae 100644[m
+[1m--- a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/request/UserRequest.java[m
+[1m+++ b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/request/UserRequest.java[m
+[36m@@ -1,22 +1,22 @@[m
+ package com.projectmanagement.spring.infrastructure.input.rest.data.request;[m
+ [m
+ [m
+[31m-import jakarta.validation.constraints.NotNull;[m
+[32m+[m[32mimport com.projectmanagement.spring.domain.model.Project;[m
+[32m+[m[32mimport com.projectmanagement.spring.domain.model.Task;[m
+ import lombok.AllArgsConstructor;[m
+ import lombok.Getter;[m
+ import lombok.NoArgsConstructor;[m
+[32m+[m[32mimport lombok.Setter;[m
+[32m+[m
+[32m+[m[32mimport java.util.Set;[m
+ [m
+ @AllArgsConstructor[m
+ @NoArgsConstructor[m
+ @Getter[m
+[32m+[m[32m@Setter[m
+ public class UserRequest {[m
+ [m
+[31m-    @NotNull(message = "may not be null")[m
+     private String firstName;[m
+[31m-[m
+[31m-    @NotNull(message = "may not be null")[m
+     private String lastName;[m
+[31m-[m
+[31m-    @NotNull(message = "may not be null")[m
+     private String email;[m
+ }[m
+[1mdiff --git a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/response/ProjectResponse.java b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/response/ProjectResponse.java[m
+[1mindex 089031f..49040d2 100644[m
+[1m--- a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/response/ProjectResponse.java[m
+[1m+++ b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/response/ProjectResponse.java[m
+[36m@@ -1,23 +1,26 @@[m
+ package com.projectmanagement.spring.infrastructure.input.rest.data.response;[m
+ [m
+[32m+[m[32mimport com.projectmanagement.spring.domain.model.Task;[m
+[32m+[m[32mimport com.projectmanagement.spring.domain.model.User;[m
+ import lombok.AllArgsConstructor;[m
+ import lombok.Getter;[m
+ import lombok.NoArgsConstructor;[m
+[32m+[m[32mimport lombok.Setter;[m
+ [m
+ import java.time.LocalDate;[m
+[32m+[m[32mimport java.util.Set;[m
+ [m
+ @NoArgsConstructor[m
+ @AllArgsConstructor[m
+ @Getter[m
+[32m+[m[32m@Setter[m
+ public class ProjectResponse {[m
+ [m
+     private Long id;[m
+[31m-[m
+     private String name;[m
+[31m-[m
+     private String description;[m
+[31m-[m
+     private LocalDate startDate;[m
+[31m-[m
+     private LocalDate endDate;[m
+[32m+[m[32m    private Set<Task> tasks;[m
+[32m+[m[32m    private Set<User> users;[m
+ }[m
+[1mdiff --git a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/response/TaskResponse.java b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/response/TaskResponse.java[m
+[1mindex d81e159..7f9287e 100644[m
+[1m--- a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/response/TaskResponse.java[m
+[1m+++ b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/response/TaskResponse.java[m
+[36m@@ -1,21 +1,29 @@[m
+ package com.projectmanagement.spring.infrastructure.input.rest.data.response;[m
+ [m
+[32m+[m[32mimport com.projectmanagement.spring.domain.model.Project;[m
+[32m+[m[32mimport com.projectmanagement.spring.domain.model.User;[m
+ import com.projectmanagement.spring.infrastructure.output.persistence.entity.PriorityEnum;[m
+[31m-import java.time.LocalDate;[m
+[32m+[m[32mimport lombok.AllArgsConstructor;[m
+[32m+[m[32mimport lombok.Getter;[m
+[32m+[m[32mimport lombok.NoArgsConstructor;[m
+[32m+[m[32mimport lombok.Setter;[m
+ [m
+[32m+[m[32mimport java.time.LocalDate;[m
+[32m+[m[32mimport java.util.Set;[m
+ [m
+[32m+[m[32m@NoArgsConstructor[m
+[32m+[m[32m@AllArgsConstructor[m
+[32m+[m[32m@Getter[m
+[32m+[m[32m@Setter[m
+ public class TaskResponse {[m
+ [m
+     private Long id;[m
+[31m-[m
+     private String name;[m
+[31m-[m
+[31m-    private PriorityEnum priority;[m
+[31m-[m
+[32m+[m[32m    private PriorityEnum priorityEnum;[m
+     private String description;[m
+[31m-[m
+     private LocalDate startDate;[m
+[31m-[m
+     private LocalDate endDate;[m
+[32m+[m[32m    private Project project;[m
+[32m+[m[32m    private Set<User> users;[m
+ }[m
+ [m
+[1mdiff --git a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/response/UserResponse.java b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/response/UserResponse.java[m
+[1mindex 80a9579..47ae8e0 100644[m
+[1m--- a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/response/UserResponse.java[m
+[1m+++ b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/data/response/UserResponse.java[m
+[36m@@ -1,20 +1,24 @@[m
+ package com.projectmanagement.spring.infrastructure.input.rest.data.response;[m
+ [m
+[31m-import jakarta.validation.constraints.NotNull;[m
+[32m+[m[32mimport com.projectmanagement.spring.domain.model.Project;[m
+[32m+[m[32mimport com.projectmanagement.spring.domain.model.Task;[m
+ import lombok.AllArgsConstructor;[m
+ import lombok.Getter;[m
+ import lombok.NoArgsConstructor;[m
+[32m+[m[32mimport lombok.Setter;[m
+[32m+[m
+[32m+[m[32mimport java.util.Set;[m
+ [m
+ @AllArgsConstructor[m
+ @NoArgsConstructor[m
+ @Getter[m
+[32m+[m[32m@Setter[m
+ public class UserResponse {[m
+ [m
+     private Long id;[m
+[31m-[m
+     private String firstName;[m
+[31m-[m
+     private String lastName;[m
+[31m-[m
+     private String email;[m
+[32m+[m[32m    private Set<Task> tasks;[m
+[32m+[m[32m    private Set<Project> projects;[m
+ }[m
+[1mdiff --git a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/mapper/ProjectRestMapper.java b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/mapper/ProjectRestMapper.java[m
+[1mindex b666ccf..cd78c9b 100644[m
+[1m--- a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/mapper/ProjectRestMapper.java[m
+[1m+++ b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/mapper/ProjectRestMapper.java[m
+[36m@@ -5,9 +5,10 @@[m [mimport com.projectmanagement.spring.infrastructure.input.rest.data.request.Proje[m
+ import com.projectmanagement.spring.infrastructure.input.rest.data.response.ProjectResponse;[m
+ import org.mapstruct.Mapper;[m
+ [m
+[31m-@Mapper[m
+[32m+[m[32m@Mapper(componentModel = "spring", uses = {TaskRestMapper.class, UserRestMapper.class})[m
+ public interface ProjectRestMapper {[m
+ [m
+[32m+[m
+     Project toProject(ProjectRequest projectRequest);[m
+ [m
+     ProjectResponse toProjectResponse(Project project);[m
+[1mdiff --git a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/mapper/TaskRestMapper.java b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/mapper/TaskRestMapper.java[m
+[1mindex 182a24d..90c2972 100644[m
+[1m--- a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/mapper/TaskRestMapper.java[m
+[1m+++ b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/mapper/TaskRestMapper.java[m
+[36m@@ -5,7 +5,7 @@[m [mimport com.projectmanagement.spring.infrastructure.input.rest.data.request.TaskR[m
+ import com.projectmanagement.spring.infrastructure.input.rest.data.response.TaskResponse;[m
+ import org.mapstruct.Mapper;[m
+ [m
+[31m-@Mapper[m
+[32m+[m[32m@Mapper(componentModel = "spring", uses = UserRestMapper.class)[m
+ public interface TaskRestMapper {[m
+ [m
+     Task toTask(TaskRequest taskRequest);[m
+[1mdiff --git a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/mapper/UserRestMapper.java b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/mapper/UserRestMapper.java[m
+[1mindex 934fc56..f0395cb 100644[m
+[1m--- a/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/mapper/UserRestMapper.java[m
+[1m+++ b/src/main/java/com/projectmanagement/spring/infrastructure/input/rest/mapper/UserRestMapper.java[m
+[36m@@ -5,7 +5,7 @@[m [mimport com.projectmanagement.spring.infrastructure.input.rest.data.request.UserR[m
+ import com.projectmanagement.spring.infrastructure.input.rest.data.response.UserResponse;[m
+ import org.mapstruct.Mapper;[m
+ [m
+[31m-@Mapper[m
+[32m+[m[32m@Mapper(componentModel = "spring", uses = {TaskRestMapper.class, ProjectRestMapper.class})[m
+ public interface UserRestMapper {[m
+ [m
+     User toUser(UserRequest userRequest);[m
+[1mdiff --git a/src/main/java/com/projectmanagement/spring/infrastructure/output/persistence/entity/TaskEntity.java b/src/main/java/com/projectmanagement/spring/infrastructure/output/persistence/entity/TaskEntity.java[m
+[1mindex 2c0504c..edf8b78 100644[m
+[1m--- a/src/main/java/com/projectmanagement/spring/infrastructure/output/persistence/entity/TaskEntity.java[m
+[1m+++ b/src/main/java/com/projectmanagement/spring/infrastructure/output/persistence/entity/TaskEntity.java[m
+[36m@@ -1,5 +1,6 @@[m
+ package com.projectmanagement.spring.infrastructure.output.persistence.entity;[m
+ [m
+[32m+[m[32mimport jakarta.annotation.Nullable;[m
+ import jakarta.persistence.*;[m
+ import lombok.AllArgsConstructor;[m
+ import lombok.Data;[m
+[36m@@ -34,7 +35,8 @@[m [mpublic class TaskEntity {[m
+     private LocalDate endDate;[m
+ [m
+     @ManyToOne[m
+[31m-    @JoinColumn(name = "project_id", nullable = false, updatable = false)[m
+[32m+[m[32m    @Nullable[m
+[32m+[m[32m    @JoinColumn(name = "project_id")[m
+     private ProjectEntity project;[m
+ [m
+     @ManyToMany(mappedBy = "tasks")[m
+[1mdiff --git a/src/main/java/com/projectmanagement/spring/infrastructure/output/persistence/mapper/TaskPersistenceMapper.java b/src/main/java/com/projectmanagement/spring/infrastructure/output/persistence/mapper/TaskPersistenceMapper.java[m
+[1mindex dcbdbf2..f15a36a 100644[m
+[1m--- a/src/main/java/com/projectmanagement/spring/infrastructure/output/persistence/mapper/TaskPersistenceMapper.java[m
+[1m+++ b/src/main/java/com/projectmanagement/spring/infrastructure/output/persistence/mapper/TaskPersistenceMapper.java[m
+[36m@@ -4,7 +4,7 @@[m [mimport com.projectmanagement.spring.domain.model.Task;[m
+ import com.projectmanagement.spring.infrastructure.output.persistence.entity.TaskEntity;[m
+ import org.mapstruct.Mapper;[m
+ [m
+[31m-@Mapper[m
+[32m+[m[32m@Mapper(componentModel = "Spring")[m
+ public interface TaskPersistenceMapper {[m
+ [m
+     TaskEntity toTaskEntity(Task task);[m
+[1mdiff --git a/src/main/resources/application.yml b/src/main/resources/application.yml[m
+[1mindex 2ff79f7..0f78167 100644[m
+[1m--- a/src/main/resources/application.yml[m
+[1m+++ b/src/main/resources/application.yml[m
+[36m@@ -3,7 +3,7 @@[m [mspring:[m
+     name: "project-management-system"[m
+   jpa:[m
+     hibernate:[m
+[31m-      ddl-auto: update[m
+[32m+[m[32m      ddl-auto: create[m
+ [m
+     show-sql: true[m
+ [m

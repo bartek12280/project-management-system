@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -26,6 +29,12 @@ public class UserRestAdapter {
         UserResponse userResponse = userRestMapper.toUserResponse(user);
 
         return ResponseEntity.ok(userResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserResponse>> getUsers() {
+        final List<UserResponse> users = userInputPort.getAllUsers().stream().map(userRestMapper::toUserResponse).toList();
+        return ResponseEntity.ok(users);
     }
 
     @PostMapping

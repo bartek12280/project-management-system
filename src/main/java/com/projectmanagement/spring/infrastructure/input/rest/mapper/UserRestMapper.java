@@ -5,7 +5,7 @@ import com.projectmanagement.spring.infrastructure.input.rest.data.request.UserR
 import com.projectmanagement.spring.infrastructure.input.rest.data.response.UserResponse;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(componentModel = "spring", uses = {TaskRestMapper.class, ProjectRestMapper.class})
 public interface UserRestMapper {
 
     User toUser(UserRequest userRequest);

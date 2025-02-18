@@ -1,5 +1,6 @@
 package com.projectmanagement.spring.infrastructure.output.persistence.entity;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,7 +35,8 @@ public class TaskEntity {
     private LocalDate endDate;
 
     @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false, updatable = false)
+    @Nullable
+    @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
     @ManyToMany(mappedBy = "tasks")

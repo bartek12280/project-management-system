@@ -1,27 +1,24 @@
 package com.projectmanagement.spring.infrastructure.input.rest.data.request;
 
 
-import jakarta.validation.constraints.NotNull;
+import com.projectmanagement.spring.domain.model.Task;
+import com.projectmanagement.spring.domain.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 public class ProjectRequest {
 
-    @NotNull(message = "may not be null")
     private String name;
-
-    @NotNull(message = "may not be null")
     private String description;
-
-    @NotNull(message = "may not be null")
     private LocalDate startDate;
-
-    @NotNull(message = "may not be null")
     private LocalDate endDate;
 }
