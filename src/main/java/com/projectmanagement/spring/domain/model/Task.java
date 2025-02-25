@@ -15,6 +15,7 @@ import java.util.Set;
 @Setter
 public class Task {
 
+    private Long id;
     private String name;
     private PriorityEnum priorityEnum;
     private String description;
