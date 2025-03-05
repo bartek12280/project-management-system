@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -32,8 +32,8 @@ public class UserRestAdapter {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserResponse>> getUsers() {
-        final List<UserResponse> users = userInputPort.getAllUsers().stream().map(userRestMapper::toUserResponse).toList();
+    public ResponseEntity<Set<UserResponse>> getUsers() {
+        final Set<UserResponse> users = userInputPort.getAllUsers().stream().map(userRestMapper::toUserResponse).collect(Collectors.toSet());
         return ResponseEntity.ok(users);
     }
 

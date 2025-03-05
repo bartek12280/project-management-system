@@ -22,8 +22,9 @@ public class TaskEntity {
     @Column(name = "name")
     private String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "priority")
-    private PriorityEnum priority;
+    private PriorityEnum priorityEnum;
 
     @Column(name = "description")
     private String description;

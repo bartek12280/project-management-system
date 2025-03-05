@@ -7,7 +7,7 @@ import com.projectmanagement.spring.domain.model.Project;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 public class ProjectService implements ProjectInputPort {
@@ -26,7 +26,7 @@ public class ProjectService implements ProjectInputPort {
     }
 
     @Override
-    public List<Project> getAllProjects() {
+    public Set<Project> getAllProjects() {
         return projectOutputPort.getAllProjects();
     }
 

@@ -2,14 +2,14 @@ package com.projectmanagement.spring.application.port.output;
 
 import com.projectmanagement.spring.domain.model.Task;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface TaskOutputPort {
 
     Task saveTask(Task task);
     Optional<Task> getTaskById(Long id);
-    List<Task> getAllTasks();
+    Set<Task> getAllTasks();
     void deleteTaskById(Long id);
     void flush();
 }

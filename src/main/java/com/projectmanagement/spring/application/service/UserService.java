@@ -7,7 +7,7 @@ import com.projectmanagement.spring.domain.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 public class UserService implements UserInputPort {
@@ -26,7 +26,7 @@ public class UserService implements UserInputPort {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public Set<User> getAllUsers() {
         return this.userOutputPort.getAllUsers();
     }
 

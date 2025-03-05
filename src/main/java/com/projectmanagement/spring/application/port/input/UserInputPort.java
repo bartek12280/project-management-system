@@ -2,12 +2,12 @@ package com.projectmanagement.spring.application.port.input;
 
 import com.projectmanagement.spring.domain.model.User;
 
-import java.util.List;
+import java.util.Set;
 
 public interface UserInputPort {
     User getUserById(Long id);
     User createuser(User user);
-    List<User> getAllUsers();
+    Set<User> getAllUsers();
     void deleteUserById(Long id);
     User updateUserById(Long id, User user);
 }

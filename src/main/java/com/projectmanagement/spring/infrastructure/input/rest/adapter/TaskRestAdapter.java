@@ -10,7 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/Tasks")
@@ -22,10 +23,10 @@ public class TaskRestAdapter {
     private final TaskInputPort taskInputPort;
 
     @GetMapping
-    public ResponseEntity<List<TaskResponse>> getTasks() {
-        List<TaskResponse> tasks = taskInputPort.getAllTasks().stream()
+    public ResponseEntity<Set<TaskResponse>> getTasks() {
+        Set<TaskResponse> tasks = taskInputPort.getAllTasks().stream()
                 .map(this.taskRestMapper::toTaskResponse)
-                .toList();
+                .collect(Collectors.toSet());
 
         return ResponseEntity.ok(tasks);
     }

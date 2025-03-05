@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -38,10 +39,10 @@ public class ProjectPersistenceAdapter implements ProjectOutputPort {
     }
 
     @Override
-    public List<Project> getAllProjects() {
+    public Set<Project> getAllProjects() {
         return this.projectRepository.findAll().stream()
                 .map(this.projectPersistenceMapper::toProject)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Override

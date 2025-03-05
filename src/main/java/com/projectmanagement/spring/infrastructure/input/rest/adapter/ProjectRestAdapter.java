@@ -10,7 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -23,10 +24,10 @@ public class ProjectRestAdapter {
     private final ProjectInputPort projectInputPort;
 
     @GetMapping
-    public ResponseEntity<List<ProjectResponse>> getAllProjects() {
-        List<ProjectResponse> projects = this.projectInputPort.getAllProjects().stream()
+    public ResponseEntity<Set<ProjectResponse>> getAllProjects() {
+        Set<ProjectResponse> projects = this.projectInputPort.getAllProjects().stream()
                 .map(this.projectRestMapper::toProjectResponse)
-                .toList();
+                .collect(Collectors.toSet());
 
         return ResponseEntity.ok(projects);
     }

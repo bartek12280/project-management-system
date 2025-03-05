@@ -7,8 +7,8 @@ import com.projectmanagement.spring.infrastructure.output.persistence.mapper.Tas
 import com.projectmanagement.spring.infrastructure.output.persistence.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -38,10 +38,8 @@ public class TaskPersistenceAdapter implements TaskOutputPort {
     }
 
     @Override
-    public List<Task> getAllTasks() {
-        return this.taskRepository.findAll().stream()
-                .map(this.taskPersistenceMapper::toTask)
-                .collect(Collectors.toList());
+    public Set<Task> getAllTasks() {
+        return this.taskRepository.findAll().stream().map(this.taskPersistenceMapper::toTask).collect(Collectors.toSet());
     }
 
     @Override

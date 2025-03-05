@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -28,7 +28,7 @@ public class TaskService implements TaskInputPort {
     }
 
     @Override
-    public List<Task> getAllTasks() {
+    public Set<Task> getAllTasks() {
         return this.taskOutputPort.getAllTasks();
     }
 
