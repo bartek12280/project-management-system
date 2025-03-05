@@ -5,6 +5,7 @@ import com.projectmanagement.spring.application.port.output.UserOutputPort;
 import com.projectmanagement.spring.domain.exception.UserNotFound;
 import com.projectmanagement.spring.domain.model.User;
 import lombok.AllArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,13 +30,16 @@ public class UserService implements UserInputPort {
         return this.userOutputPort.getAllUsers();
     }
 
+    @Transactional
     @Override
     public void deleteUserById(Long id) {
-        if (!this.userOutputPort.getUserById(id).isPresent()) {
+        if (this.userOutputPort.getUserById(id).isEmpty()) {
             throw new UserNotFound("User with id: " + id + " not found");
         }
 
-        this.userOutputPort.deleteUser(id);
+        userOutputPort.flush();
+
+        this.userOutputPort.deleteUserById(id);
     }
 
     @Override

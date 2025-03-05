@@ -6,6 +6,7 @@ import com.projectmanagement.spring.domain.exception.TaskNotFound;
 import com.projectmanagement.spring.domain.model.Task;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,11 +32,15 @@ public class TaskService implements TaskInputPort {
         return this.taskOutputPort.getAllTasks();
     }
 
+    @Transactional
     @Override
     public void deleteTaskById(Long id) {
-        if (!this.taskOutputPort.getTaskById(id).isPresent()) {
+        if (this.taskOutputPort.getTaskById(id).isEmpty()) {
             throw new TaskNotFound("Task with id: " + id + " not found");
         }
+
+        taskOutputPort.flush();
+
         this.taskOutputPort.deleteTaskById(id);
     }
 

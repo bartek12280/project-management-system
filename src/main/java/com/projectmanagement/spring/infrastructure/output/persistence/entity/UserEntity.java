@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.util.Set;
 
 @Entity
@@ -26,7 +27,7 @@ public class UserEntity {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
             name = "User_Task",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -34,7 +35,7 @@ public class UserEntity {
     )
     private Set<TaskEntity> tasks;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
             name="User_Project",
             joinColumns = {@JoinColumn(name = "user_id")},

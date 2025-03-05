@@ -11,4 +11,5 @@ public interface ProjectOutputPort {
     Optional<Project> getProjectById(Long id);
     List<Project> getAllProjects();
     void deleteProjectById(Long id);
+    void flush();
 }

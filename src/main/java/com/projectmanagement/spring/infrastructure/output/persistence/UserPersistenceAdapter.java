@@ -46,7 +46,12 @@ public class UserPersistenceAdapter implements UserOutputPort {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUserById(Long id) {
         this.userRepository.deleteById(id);
+    }
+
+    @Override
+    public void flush() {
+        userRepository.flush();
     }
 }

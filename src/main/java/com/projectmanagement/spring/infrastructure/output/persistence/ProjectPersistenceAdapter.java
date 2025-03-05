@@ -48,4 +48,9 @@ public class ProjectPersistenceAdapter implements ProjectOutputPort {
     public void deleteProjectById(Long id) {
         this.projectRepository.deleteById(id);
     }
+
+    @Override
+    public void flush() {
+        projectRepository.flush();
+    }
 }

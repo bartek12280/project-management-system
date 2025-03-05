@@ -57,6 +57,6 @@ public class UserRestAdapter {
     @DeleteMapping("/{id}")
     public ResponseEntity<UserResponse> deleteUser(@PathVariable Long id) {
         this.userInputPort.deleteUserById(id);
-        return ResponseEntity.ok(this.userRestMapper.toUserResponse(this.userInputPort.getUserById(id)));
+        return ResponseEntity.noContent().build();
     }
 }

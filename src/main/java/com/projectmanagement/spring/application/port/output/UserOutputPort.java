@@ -10,5 +10,6 @@ public interface UserOutputPort {
     User saveUser(User user);
     Optional<User> getUserById(Long id);
     List<User> getAllUsers();
-    void deleteUser(Long id);
+    void deleteUserById(Long id);
+    void flush();
 }

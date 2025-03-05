@@ -48,4 +48,9 @@ public class TaskPersistenceAdapter implements TaskOutputPort {
     public void deleteTaskById(Long id) {
         this.taskRepository.deleteById(id);
     }
+
+    @Override
+    public void flush() {
+        taskRepository.flush();
+    }
 }

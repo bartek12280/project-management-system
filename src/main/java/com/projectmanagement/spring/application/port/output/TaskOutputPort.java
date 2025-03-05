@@ -11,4 +11,5 @@ public interface TaskOutputPort {
     Optional<Task> getTaskById(Long id);
     List<Task> getAllTasks();
     void deleteTaskById(Long id);
+    void flush();
 }

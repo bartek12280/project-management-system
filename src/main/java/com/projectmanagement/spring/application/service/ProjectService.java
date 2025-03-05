@@ -5,6 +5,7 @@ import com.projectmanagement.spring.application.port.output.ProjectOutputPort;
 import com.projectmanagement.spring.domain.exception.ProjectNotFound;
 import com.projectmanagement.spring.domain.model.Project;
 import lombok.AllArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,11 +30,15 @@ public class ProjectService implements ProjectInputPort {
         return projectOutputPort.getAllProjects();
     }
 
+    @Transactional
     @Override
     public void deleteProjectById(Long id) {
-        if (!this.projectOutputPort.getProjectById(id).isPresent()) {
+        if (this.projectOutputPort.getProjectById(id).isEmpty()) {
             throw new ProjectNotFound("Project with id: " + id + " not found");
         }
+
+        projectOutputPort.flush();
+
         this.projectOutputPort.deleteProjectById(id);
     }
 
