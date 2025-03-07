@@ -5,6 +5,7 @@ import com.projectmanagement.spring.application.port.output.UserOutputPort;
 import com.projectmanagement.spring.domain.exception.UserNotFound;
 import com.projectmanagement.spring.domain.model.User;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
@@ -13,6 +14,7 @@ import java.util.Set;
 public class UserService implements UserInputPort {
 
     private final UserOutputPort userOutputPort;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User getUserById(Long id) {
@@ -21,6 +23,8 @@ public class UserService implements UserInputPort {
 
     @Override
     public User createuser(User user) {
+        String defaultPassword = generateDefaultPassword(user.getFirstName(), user.getLastName());
+        user.setPassword(passwordEncoder.encode(defaultPassword));
         user = this.userOutputPort.saveUser(user);
         return user;
     }
@@ -51,6 +55,10 @@ public class UserService implements UserInputPort {
         user.setProjects(updatedUser.getProjects());
 
         return this.userOutputPort.saveUser(user);
+    }
+
+    private String generateDefaultPassword(String firstName, String lastName) {
+        return "0"+lastName+firstName.charAt(0);
     }
 
 

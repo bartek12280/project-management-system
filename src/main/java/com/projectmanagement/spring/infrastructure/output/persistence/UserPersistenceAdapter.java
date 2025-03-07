@@ -39,6 +39,11 @@ public class UserPersistenceAdapter implements UserOutputPort {
     }
 
     @Override
+    public Optional<Object[]> findBasicUserByEmail(String email) {
+        return this.userRepository.findBasicUserByEmail(email);
+    }
+
+    @Override
     public Set<User> getAllUsers() {
         return this.userRepository.findAll().stream()
                 .map(this.userPersistenceMapper::toUser)
