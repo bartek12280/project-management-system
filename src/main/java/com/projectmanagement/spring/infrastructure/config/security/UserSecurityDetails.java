@@ -16,7 +16,7 @@ public class UserSecurityDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList(); // Możesz dodać role, jeśli są potrzebne
+        return Collections.emptyList();
     }
 
     @Override

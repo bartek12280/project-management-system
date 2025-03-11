@@ -6,19 +6,24 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
 class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/public/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(withDefaults());
-        return http.build();
+                .formLogin(login -> login
+                        .defaultSuccessUrl("/swagger-ui/index.html", true) // withDefaults()
+                )
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/login")
+                )
+                .build();
+
+
     }
 }

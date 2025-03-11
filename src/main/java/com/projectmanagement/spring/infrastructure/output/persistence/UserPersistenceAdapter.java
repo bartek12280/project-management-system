@@ -2,6 +2,7 @@ package com.projectmanagement.spring.infrastructure.output.persistence;
 
 import com.projectmanagement.spring.application.port.output.UserOutputPort;
 import com.projectmanagement.spring.domain.model.User;
+import com.projectmanagement.spring.domain.model.UserLogin;
 import com.projectmanagement.spring.infrastructure.output.persistence.entity.UserEntity;
 import com.projectmanagement.spring.infrastructure.output.persistence.mapper.UserPersistenceMapper;
 import com.projectmanagement.spring.infrastructure.output.persistence.repository.UserRepository;
@@ -39,8 +40,16 @@ public class UserPersistenceAdapter implements UserOutputPort {
     }
 
     @Override
-    public Optional<Object[]> findBasicUserByEmail(String email) {
-        return this.userRepository.findBasicUserByEmail(email);
+    public Optional<UserLogin> findBasicUserByEmail(String email) {
+
+        final Optional<UserEntity> userEntity = this.userRepository.findByEmail(email);
+
+        if (userEntity.isEmpty()){
+            return Optional.empty();
+        }
+
+        UserLogin user = this.userPersistenceMapper.toUserLogin(userEntity.get());
+        return Optional.of(user);
     }
 
     @Override
