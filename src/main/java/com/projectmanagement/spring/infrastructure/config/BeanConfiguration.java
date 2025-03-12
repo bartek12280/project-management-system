@@ -15,6 +15,7 @@ import com.projectmanagement.spring.infrastructure.output.persistence.repository
 import com.projectmanagement.spring.infrastructure.output.persistence.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class BeanConfiguration {
@@ -26,8 +27,8 @@ public class BeanConfiguration {
 
     // todo: add actionListener
     @Bean
-    public UserService userService(final UserPersistenceAdapter userPersistenceAdapter) {
-        return new UserService(userPersistenceAdapter);
+    public UserService userService(final UserPersistenceAdapter userPersistenceAdapter, final PasswordEncoder passwordConfig) {
+        return new UserService(userPersistenceAdapter, passwordConfig);
     }
 
     @Bean

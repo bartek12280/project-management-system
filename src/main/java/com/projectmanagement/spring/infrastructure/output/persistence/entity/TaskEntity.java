@@ -40,7 +40,7 @@ public class TaskEntity {
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
-    @ManyToMany(mappedBy = "tasks", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToMany(mappedBy = "tasks", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<UserEntity> users;
 }
 

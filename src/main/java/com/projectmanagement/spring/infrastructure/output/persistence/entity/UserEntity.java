@@ -27,7 +27,10 @@ public class UserEntity {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "User_Task",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -35,15 +38,12 @@ public class UserEntity {
     )
     private Set<TaskEntity> tasks;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name="User_Project",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "project_id")}
     )
     private Set<ProjectEntity> projects;
-
-    // TODO: logging?
-    // TODO: Permissions
 }
 
